@@ -8,7 +8,7 @@ import java.net.URL
 
 class ConnectionAPI {
 
-    var URLJD = "http:10.0.2.2:1234";
+    var URLJD = "http:10.0.2.2:3115";
 
     enum class method {
         GET,
@@ -31,7 +31,7 @@ class ConnectionAPI {
             }
             if(client.inputStream!=null){
                 client.inputStream.bufferedReader().use {
-                    callBasic.Error(it.readText(),client.responseCode)
+                    callBasic.Finish(it.readText(),client.responseCode)
                 }
                 return@launch
             }
