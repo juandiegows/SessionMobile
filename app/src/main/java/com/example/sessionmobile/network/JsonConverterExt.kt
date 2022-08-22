@@ -22,10 +22,10 @@ fun JSONObject.toClass(nameClass: String): Any {
                 else -> {
                     try {
                         this.toClass(it.type.name)
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
                         try {
                             this.getJSONArray(it.name).toClassList(it.type.name)
-                        }catch (er:Exception){
+                        } catch (er: Exception) {
 
                         }
 
@@ -41,13 +41,28 @@ fun JSONObject.toClass(nameClass: String): Any {
 
 
 fun JSONArray.toClassList(nameClass: String): List<Any> {
-   var lista = ArrayList<Any>()
-    for (i in 0 until this.length()){
+    var lista = ArrayList<Any>()
+    for (i in 0 until this.length()) {
         lista.add(this.getJSONObject(i).toClass(nameClass))
     }
     return lista
 }
 
-inline fun <reified T:Any> Any.Cast():T{
-    return  this as T
+fun Any.toJson(): String {
+    var objetc = JSONObject();
+    this.javaClass.declaredFields.forEach {
+        it.isAccessible = true
+        objetc.put(it.name, it.get(this))
+    }
+    return objetc.toString()
+}
+fun  List<Any>.toJsonList():String{
+    var list = JSONArray()
+    this.forEach {
+        list.put(JSONObject(it.toJson()))
+    }
+    return list.toString()
+}
+inline fun <reified T : Any> Any.Cast(): T {
+    return this as T
 }

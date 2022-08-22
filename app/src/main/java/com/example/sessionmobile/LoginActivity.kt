@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.sessionmobile.model.Funcao
-import com.example.sessionmobile.network.CallBasic
-import com.example.sessionmobile.network.Cast
-import com.example.sessionmobile.network.ConnectionAPI
-import com.example.sessionmobile.network.toClassList
+import com.example.sessionmobile.network.*
 import org.json.JSONArray
+import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +18,8 @@ class LoginActivity : AppCompatActivity() {
                 Log.e("Finish", "Finish($status): $responseText")
                 var funcao: List<Funcao> =
                     JSONArray(responseText).toClassList(Funcao().javaClass.name).Cast()
+
+                Log.e("JsonObject", "Finish: ${funcao.toJsonList()}")
                 funcao.forEach {
                     Log.e("Data", "${it.id} ${it.funcao}" )
                 }
