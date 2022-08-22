@@ -9,37 +9,41 @@ import java.net.URL
 
 class ConnectionAPI {
 
-    var URLJD = "http:10.0.2.2:3115";
 
-    enum class method {
-        GET,
-        POST,
-        PUT,
-        DELETE
-    }
+    companion object {
+        var URLJD = "http:10.0.2.2:3115";
 
-    fun StartQuery(address: String, method: method, data: String, callBasic: CallBasic) {
-        CoroutineScope(Dispatchers.IO).launch {
-            var client = URL("$URLJD/$address").openConnection() as HttpURLConnection
+        enum class method {
+            GET,
+            POST,
+            PUT,
+            DELETE
+        }
 
-            client.requestMethod = method.name
-            if(method==ConnectionAPI.method.POST || method==ConnectionAPI.method.PUT){
-                client.setRequestProperty("content-type","application/json")
-                client.outputStream.write(data.encodeToByteArray())
-            }
+        fun StartQuery(address: String, method: method, data: String, callBasic: CallBasic) {
+            CoroutineScope(Dispatchers.IO).launch {
+                var client = URL("$URLJD/$address").openConnection() as HttpURLConnection
 
-            if (client.errorStream != null) {
-                client.errorStream.bufferedReader().use {
-                    callBasic.Error(it.readText(), client.responseCode)
+                client.requestMethod = method.name
+                if (method == Companion.method.POST || method == Companion.method.PUT) {
+                    client.setRequestProperty("content-type", "application/json")
+                    client.outputStream.write(data.encodeToByteArray())
                 }
-                return@launch
-            }
-            if (client.inputStream != null) {
-                client.inputStream.bufferedReader().use {
-                    callBasic.Finish(it.readText(), client.responseCode)
+
+                if (client.errorStream != null) {
+                    client.errorStream.bufferedReader().use {
+                        callBasic.Error(it.readText(), client.responseCode)
+                    }
+                    return@launch
                 }
-                return@launch
+                if (client.inputStream != null) {
+                    client.inputStream.bufferedReader().use {
+                        callBasic.Finish(it.readText(), client.responseCode)
+                    }
+                    return@launch
+                }
             }
         }
+
     }
 }

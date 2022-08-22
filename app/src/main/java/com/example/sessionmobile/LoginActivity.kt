@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-        ConnectionAPI().StartQuery("api/Auth", ConnectionAPI.method.POST,
+        ConnectionAPI.StartQuery("api/Auth", ConnectionAPI.Companion.method.POST,
             Login(binding.txtEmail.textJD, binding.txtPassword.textJD).toJson(),
             object : CallBasic {
 
