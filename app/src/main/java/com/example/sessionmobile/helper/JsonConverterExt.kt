@@ -1,5 +1,6 @@
 package com.example.sessionmobile.network
 
+import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.reflect.javaType
@@ -56,13 +57,20 @@ fun Any.toJson(): String {
     }
     return objetc.toString()
 }
-fun  List<Any>.toJsonList():String{
+
+fun List<Any>.toJsonList(): String {
     var list = JSONArray()
     this.forEach {
         list.put(JSONObject(it.toJson()))
     }
     return list.toString()
 }
+
 inline fun <reified T : Any> Any.Cast(): T {
     return this as T
 }
+
+var TextInputEditText.textJD: String
+    get() = this.text.toString()
+    set(value) {this.setText(value)}
+
