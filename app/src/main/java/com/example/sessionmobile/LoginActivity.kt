@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import com.example.sessionmobile.databinding.ActivityLoginBinding
 import com.example.sessionmobile.helper.AlertJD
+import com.example.sessionmobile.helper.HttpStatus
 import com.example.sessionmobile.helper.Requerido
 import com.example.sessionmobile.helper.RequeridoEmail
 import com.example.sessionmobile.model.Funcao
@@ -31,27 +32,12 @@ class LoginActivity : AppCompatActivity() {
             loguearse()
         }
         binding.txtEmail.RequeridoEmail(binding.txtSEmail)
-        binding.txtEmail.textJD
-        /* binding.txtEmail.setOnFocusChangeListener{
-                 view, b ->
-             if(b){
-                 binding.txtSEmail.error = ""
-             }else{
-                 if(binding.txtEmail.textJD.length==0){
-                     binding.txtSEmail.error = "Este Campo debe ser obligatorio"
-                 }else if (!Patterns.EMAIL_ADDRESS.matcher(binding.txtEmail.textJD).matches()){
-                     binding.txtSEmail.error = "Este Campo debe ser  un correo"
-                 }else {
-                     binding.txtSEmail.error = ""
-                 }
-             }
-         }*/
+        binding.txtPassword.Requerido(binding.txtSPassword)
     }
 
     private fun loguearse() {
 
-        Log.e("Test", "loguearse: ${binding.txtSEmail.error.isNullOrEmpty()}")
-        if (binding.txtEmail.text.isNullOrEmpty() || binding.txtPassword.text.isNullOrEmpty()) {
+         if (binding.txtEmail.text.isNullOrEmpty() || binding.txtPassword.text.isNullOrEmpty()) {
 
             if (binding.txtEmail.text.isNullOrEmpty())
                 binding.txtSEmail.error = "Este campo es obligatorio"
@@ -71,16 +57,17 @@ class LoginActivity : AppCompatActivity() {
             object : CallBasic {
 
                 override fun Finish(responseText: String, status: Int) {
-                    if (status==200){
-                        Toast.makeText(this@LoginActivity, responseText,Toast.LENGTH_LONG).show()
-                    }
+
                     Log.e("Finish", "Finish($status): $responseText")
                     runOnUiThread {
-                        if (responseText.equals("true", true)) {
+                        if(status==HttpStatus.OK){
+                            if (responseText.equals("true", true)) {
 
-                        } else {
-                            AlertJD.AlertOK(this@LoginActivity, "Usuario o contraseña incorrecta")
+                            } else {
+                                AlertJD.AlertOK(this@LoginActivity, "Usuario o contraseña incorrecta")
+                            }
                         }
+
                     }
                 }
 
